@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "999400462517",
+    "firebase_url": "https://serviceondemandapp.firebaseio.com",
+    "project_id": "serviceondemandapp",
+    "storage_bucket": "serviceondemandapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:999400462517:android:a1bfed2c84f60a1b1c46fc",
+        "android_client_info": {
+          "package_name": "com.example.servicesondemand"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "999400462517-no183bp12848m19ekrcn799jihsjncim.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZxf7FFGFumxMnyga3w4LqJ42ivHoe0Ic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "999400462517-no183bp12848m19ekrcn799jihsjncim.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
