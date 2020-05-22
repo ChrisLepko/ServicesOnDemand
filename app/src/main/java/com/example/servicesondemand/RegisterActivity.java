@@ -48,10 +48,25 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if(task.isSuccessful()){
-                                sendUserData();
-                                Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_SHORT).show();
-                                finish();
-                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+//                                sendUserData();
+//                                Toast.makeText(getApplicationContext(), "Registration Successful", Toast.LENGTH_SHORT).show();
+
+                                //SEND EMAIL VERIFICATION
+                                firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            sendUserData();
+                                            Toast.makeText(getApplicationContext(), "Registration Successful. Please check your email for verification.", Toast.LENGTH_LONG).show();
+                                            finish();
+                                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                                        }
+                                    }
+                                });
+                                // END OF EMAIL VERIFICATION
+
+//                                finish();
+//                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
                             }else{
                                 Toast.makeText(getApplicationContext(), "Registration Failed", Toast.LENGTH_SHORT).show();
                             }

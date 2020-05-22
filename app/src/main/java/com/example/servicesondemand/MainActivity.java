@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText emailEditText, passwordEditText;
     private Button loginButton;
-    private TextView registerTextView;
+    private TextView registerTextView, forgotPasswordTextView;
     private FirebaseAuth firebaseAuth;
     private String email, password;
 
@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         loginButton = findViewById(R.id.loginButton);
         registerTextView = findViewById(R.id.registerTextView);
+        forgotPasswordTextView = findViewById(R.id.forgotPasswordTextView);
     }
 
     @Override
@@ -57,6 +58,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        forgotPasswordTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), PasswordResetActivity.class));
+            }
+        });
+
+
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,9 +88,19 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
-                    finish();
-                    startActivity(new Intent(getApplicationContext(),MainScreenActivity.class));
+                    //EMAIL VERIFICATION
+                    if(firebaseAuth.getCurrentUser().isEmailVerified()){
+                        Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
+                        finish();
+                        startActivity(new Intent(getApplicationContext(),MainScreenActivity.class));
+                    } else {
+                        Toast.makeText(getApplicationContext(),"Please verify your email address", Toast.LENGTH_LONG).show();
+                    }
+                    //END OF EMAIL VERIFICATION
+
+//                    Toast.makeText(getApplicationContext(),"Login Successful", Toast.LENGTH_SHORT).show();
+//                    finish();
+//                    startActivity(new Intent(getApplicationContext(),MainScreenActivity.class));
                 }else {
                     Toast.makeText(getApplicationContext(),"Login Failed", Toast.LENGTH_SHORT).show();
 

@@ -34,6 +34,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private DatabaseReference databaseReference, finalDatabaseReference;
     private FirebaseUser firebaseUser;
 
+    private String currentEmail, currentUsername;
+
     private void setupUIView(){
         profileInfoTextView = findViewById(R.id.profileInfoTextView);
         userNameInfoTextView = findViewById(R.id.userNameInfoTextView);
@@ -65,6 +67,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
                 newUserNameEditText.setText(userProfile.getUsername());
                 newEmailEditText.setText(userProfile.getEmail());
+                currentEmail = userProfile.getEmail();
+                currentUsername = userProfile.getUsername();
             }
 
             @Override
@@ -78,22 +82,38 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(validate()){
                     String username = newUserNameEditText.getText().toString();
-                    String email = newEmailEditText.getText().toString();
+                    final String email = newEmailEditText.getText().toString();
 
                     UserProfile userProfile = new UserProfile(email, username);
 
                     finalDatabaseReference.setValue(userProfile);
-                    firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful()){
-                                Toast.makeText(getApplicationContext(), "Profile information updated successfully!",Toast.LENGTH_SHORT).show();
-                                finish();
-                            }else {
-                                Toast.makeText(getApplicationContext(), "Profile information update failure!",Toast.LENGTH_SHORT).show();
+                    if(!currentEmail.equals(email)){
+                        firebaseUser.updateEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()){
+                                                Toast.makeText(getApplicationContext(), "Profile information updated successfully! Make sure that you have verified your email before next login!",Toast.LENGTH_LONG).show();
+                                                finish();
+                                            }
+                                        }
+                                    });
+//                                Toast.makeText(getApplicationContext(), "Profile information updated successfully!",Toast.LENGTH_SHORT).show();
+//                                finish();
+                                }else {
+                                    Toast.makeText(getApplicationContext(), "Profile information update failure!",Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else if (currentEmail.equals(email) && !currentUsername.equals(username)){
+                        Toast.makeText(getApplicationContext(), "Profile information updated successfully!",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No changes made!",Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             }
