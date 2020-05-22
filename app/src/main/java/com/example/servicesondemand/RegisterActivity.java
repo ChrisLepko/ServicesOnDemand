@@ -114,10 +114,12 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void sendUserData(){
+        String imageURL = "default";
+
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         DatabaseReference myRef = firebaseDatabase.getReference(firebaseAuth.getUid());
         DatabaseReference myRefFinal = myRef.child("UserProfile");
-        UserProfile userProfile = new UserProfile(email, userName);
+        UserProfile userProfile = new UserProfile(email, userName, imageURL);
         myRefFinal.setValue(userProfile);
 
         DatabaseReference demoRef = myRef.child("Cases");

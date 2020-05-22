@@ -1,23 +1,39 @@
 package com.example.servicesondemand;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
+import com.google.firebase.storage.UploadTask;
+
+import java.util.HashMap;
 
 public class ProfileActivity extends AppCompatActivity {
     private ImageView profileImageView;
@@ -25,6 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editButton, changePasswordButton;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
+
+    private DatabaseReference databaseReference, userDatabaseReference;
 
     private void setupUIViews(){
         profileImageView = findViewById(R.id.profileImageView);
@@ -45,8 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
 
-        DatabaseReference databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
-        DatabaseReference userDatabaseReference = databaseReference.child("UserProfile");
+        databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
+        userDatabaseReference = databaseReference.child("UserProfile");
 
         userDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -54,6 +72,11 @@ public class ProfileActivity extends AppCompatActivity {
                 UserProfile userProfile = dataSnapshot.getValue(UserProfile.class);
                 userNameTextView.setText("Username:   " + userProfile.getUsername());
                 userEmailTextView.setText("Email:   " + userProfile.getEmail());
+                if(userProfile.getImageURL().equals("default")){
+                    profileImageView.setImageResource(R.mipmap.ic_launcher);
+                } else {
+                    Glide.with(ProfileActivity.this).load(userProfile.getImageURL()).into(profileImageView);
+                }
             }
 
             @Override
@@ -75,6 +98,7 @@ public class ProfileActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), ChangePasswordActivity.class));
             }
         });
+
     }
 
     @Override
