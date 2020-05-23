@@ -52,7 +52,7 @@ Here you will be able to see all the problems that other Service on Demand users
   <img src="screenshots/locationview.png" width="25%">
 </p>
 
-### Manage your account
+### Manage your account.
 You are also able to manage your Services on Demand account. Surely you can change your username, email and password, but also you can change your profile image by uploading the picture from your android device.
 
 <p align="center">
