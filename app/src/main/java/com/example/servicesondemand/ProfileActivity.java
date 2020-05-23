@@ -42,6 +42,8 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
 
+    private StorageReference storageReference;
+
     private DatabaseReference databaseReference, userDatabaseReference;
 
     private void setupUIViews(){
@@ -62,6 +64,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+
+        storageReference = FirebaseStorage.getInstance().getReference("uploads");
 
         databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
         userDatabaseReference = databaseReference.child("UserProfile");
